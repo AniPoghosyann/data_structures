@@ -1,22 +1,30 @@
 #include<iostream>
 using namespace std;
-// template for class node
-template <class popoxakan>
+/*
+ * Template Node class
+ * NodeType represents the data type of key and value
+ */
+
+template <class t>
 class Node{
 public:
-        popoxakan value;
-        Node<popoxakan>* prev = nullptr;
-        Node<popoxakan>* next = nullptr;
-        Node(popoxakan b){
+        t value; //value stored
+        Node<t>* prev = nullptr; // pointer to previous node
+        Node<t>* next = nullptr; // pointer to next node
+	//constructor to initialize key and value
+        Node(t b){
                 value = b;
         }
 };
+/*
+ * Linked List class (templated)
+ */
 
 template <class type>
 class LinkedList{
 private:
-        Node<type>* head = nullptr;
-        Node<type>* tail = nullptr;
+        Node<type>* head = nullptr; // pointer to head
+        Node<type>* tail = nullptr; // pointer to tail
         int count = 0;
 public:
         void push_back(type b){
