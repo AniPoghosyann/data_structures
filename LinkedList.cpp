@@ -1,6 +1,6 @@
 #include<iostream>
 using namespace std;
-// comment
+// template for class node
 template <class popoxakan>
 class Node{
 public:
