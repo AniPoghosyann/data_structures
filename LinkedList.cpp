@@ -4,7 +4,6 @@ using namespace std;
  * Template Node class
  * NodeType represents the data type of key and value
  */
-
 template <class t>
 class Node{
 public:
@@ -19,118 +18,160 @@ public:
 /*
  * Linked List class (templated)
  */
-
 template <class type>
 class LinkedList{
 private:
-        Node<type>* head = nullptr; // pointer to head
-        Node<type>* tail = nullptr; // pointer to tail
-        int count = 0;
+    	Node<type>* head = nullptr; // pointer to head
+    	Node<type>* tail = nullptr; // pointer to tail
+        int count = 0; // Number of elements in the list
 public:
+ 	 	/*
+     	* Add a new element at the end of the list
+     	*/
         void push_back(type b){
-                Node<type>* temp =new Node(b);
+            	Node<type>* temp =new Node(b);
                 if(head==nullptr){
-                         head = temp;
-                         tail = temp;
+					// List is empty
+                    head = temp;
+                    tail = temp;
                 }else{
-                        temp->prev = tail;
-                        tail->next = temp;
-                        tail = temp;
+					// Attach to the end
+                    temp->prev = tail;
+                    tail->next = temp;
+                    tail = temp;
                 }
                 count++;
         }
-
-        void pop_back(){
-                tail = tail->prev;
-                delete tail->next;
-                tail->next = nullptr;
-                count--;
-	}
-
- void print(){
-                for(Node<type>* k=head; k!=nullptr; k=k->next){
-                        cout<<"value: "<<k->value<<endl;
-                }
+	 	/*
+     	* Remove the last element from the list
+     	*/
+    	void pop_back(){
+        	tail = tail->prev;
+        	delete tail->next;
+        	tail->next = nullptr;
+        	count--;
+		}
+		/*
+     	* Print all values in the list
+     	*/
+	 	void print(){
+        	    for(Node<type>* k=head; k!=nullptr; k=k->next){
+            	    cout<<"value: "<<k->value<<endl;
+            	}
+    	}
+		/*
+     	* Destructor
+     	* Frees all dynamically allocated nodes
+     	*/
+		~LinkedList(){
+            while(head!=nullptr){
+                Node<type>* i = head->next;
+                delete head;
+				head = i;
+        	}
         }
-        ~LinkedList(){
-                while(head!=nullptr){
-                        Node<type>* i = head->next;
-                        delete head;
-                        head = i;
-                }
-        }
+
+		/*
+     	* Default constructor
+     	*/
         LinkedList(){
-        count++;
+        	count++;
         }
+
+		/*
+     	* Copy constructor
+     	* Creates a deep copy of another LinkedList
+     	*/
         LinkedList(LinkedList& x){
                 for(Node<type>* k=x.head;k!=nullptr; k=k->next){
                         push_back(k->value);
                 }
         }
 
-
-
+		/*
+     	* Assignment operator overload
+     	* Handles deep copy and self-assignment
+     	*/
         LinkedList&  operator=(const LinkedList& x){
                 if(head==nullptr){
-                        for(Node<type>* k=x.head; k!=nullptr; k=k->next){
-
-                                push_back(k->value);
-                        }
+					// If current list is empty
+        			for(Node<type>* k=x.head; k!=nullptr; k=k->next){
+                         push_back(k->value);
+                     }
                 }else{
-                        for(Node<type>*k=head; k!=nullptr;k=k->next){
-                                        Node<type>* i = k;
-                                        delete i;
-                        }
-                        for(Node<type>* k=x.head; k!=nullptr; k=k->next){
-                                push_back(k->value);
-                        }
+					// Delete existing nodes
+                    for(Node<type>*k=head; k!=nullptr;k=k->next){
+                         Node<type>* i = k;
+                         delete i;
+                    }
+					// Copy new nodes
+                    for(Node<type>* k=x.head; k!=nullptr; k=k->next){
+                         push_back(k->value);
+                    }
                 }
                 return *this;
         }
- friend ostream& operator<<(ostream& tpel, LinkedList& x){
+		
+		/*
+     	* Output stream operator <<
+     	* Allows printing the list using cout
+     	*/
+ 		friend ostream& operator<<(ostream& tpel, LinkedList& x){
                 tpel<<"-------opertor's<< call-"<<endl;
                 for(Node<type>* k=x.head; k!=nullptr; k=k->next){
                         tpel<<"Value:    "<<k->value<<endl;
                 }
                 return tpel;
         }
-
-        friend istream& operator>>(istream& nerm, LinkedList& x){
+    	
+		/*
+     	* Input stream operator >>
+     	* Allows user-driven input into the list
+     	*/
+        friend istream& operator>>(istream& input, LinkedList& x){
                 bool b = true;
                 type value;
                 while(b){
-                        cout<<"value:    "<<endl;
-                        nerm>>value;
-                        x.push_back(value);
-                        bool a = true;
-                        while(a){
-                                cout<<"do you want to continue? 1. yes 0.no"<<endl;
-                                int y;
-                                nerm>>y;
-                                if(y==1){
-                                        b = true;
-                                        a = false;
-                                }else if(y==0){
-                                        b = false;
-                                        a = false;
-                                }else{
-                                        cout<<"wrong number, try again"<<endl;
-                                        a = true;
-                                        b = true;
-                                }
-                        }
+                    cout<<"value:    "<<endl;
+                    nerm>>value;
+                    x.push_back(value);
+                    bool a = true;
+                    while(a){
+                         cout<<"do you want to continue? 1. yes 0.no"<<endl;
+                         int y;
+                         input>>y;
+                         if(y==1){
+                             b = true;
+                             a = false;
+                         }else if(y==0){
+                             b = false;
+                             a = false;
+                         }else{
+                             cout<<"wrong number, try again"<<endl;
+                             a = true;
+                             b = true;
+                          }
+                    }
                 }
 
-                return nerm;
+                return input;
         }
-
-LinkedList<type>& operator++(){
+		/*
+	    * Prefix increment operator (++list)
+	    * Increments all values by 1
+	    */
+		LinkedList<type>& operator++(){
                 cout<<"Prefix operator"<<endl;
                 for(Node<type>* i=head; i!=nullptr;i=i->next){
                         i->value = i->value+1;
                 }
                 return *this;
         }
+
+		/*
+     	* Postfix increment operator (list++)
+     	* Returns old list, then increments values
+     	*/
         LinkedList<type> operator ++(int a){
                 cout<<"postfix operator"<<endl;
                 LinkedList<type> b = *this;
@@ -139,46 +180,59 @@ LinkedList<type>& operator++(){
                 }
                 return b;
         }
-
+		
+		/*
+     	* Prefix decrement operator (--list)
+     	*/
         LinkedList<type>& operator--(){
-                cout<<"Prefix operator"<<endl;
-                for(Node<type>* i=head; i!=nullptr;i=i->next){
-                        i->value = i->value-1;
-                }
-                return *this;
-        }
-         LinkedList<type> operator --(int a){
-                cout<<"postfix operator"<<endl;
-                LinkedList<type> b = *this;
-                for(Node<type>* i=head; i!=nullptr; i=i->next){
-                        i->value = i->value-1;
-                }
-                return b;
-
-        }
- type operator[](int index){
-                cout<<"operator []  "<<endl;
-                if(index<0 or index>count){
-                        int a = 777;
-                        throw a;
-                }
-                cout<<"----1''''''"<<endl;
-                Node<type>* x = head;
-                cout<<"x:  "<<x->value<<endl;
-                for(int i=0; i<index; i++){
-                        cout<<"inside for "<<endl;
-                        x = x->next;
-                }
-
-                cout<<"--after for--"<<endl;
-                return x->value;
+            cout<<"Prefix operator"<<endl;
+            for(Node<type>* i=head; i!=nullptr;i=i->next){
+                i->value = i->value-1;
+            }
+            return *this;
         }
 
+		/*
+     	* Postfix decrement operator (list--)
+    	*/
+        LinkedList<type> operator --(int a){
+            cout<<"postfix operator"<<endl;
+            LinkedList<type> b = *this;
+            for(Node<type>* i=head; i!=nullptr; i=i->next){
+                i->value = i->value-1;
+            }
+            return b;
 
+        }
 
+		/*
+     	* Subscript operator []
+     	* Access element by index
+    	* Throws exception if index is invalid
+     	*/
+ 		type operator[](int index){
+            cout<<"operator []  "<<endl;
+            if(index<0 or index>count){
+                int a = 777;// Custom error code
+                throw a;
+            }
+            cout<<"----1''''''"<<endl;
+            Node<type>* x = head;
+            cout<<"x:  "<<x->value<<endl;
+            for(int i=0; i<index; i++){
+                x = x->next;
+			}
+            return x->value;
+        }
 };
-int main()
-{
+
+/*
+ * =========================
+ * Main Function
+ * =========================
+ * Demonstrates usage of the LinkedList class
+ */
+int main() {
         try{
                 LinkedList<int> a; //LInkedList()
                 a.push_back(12);
